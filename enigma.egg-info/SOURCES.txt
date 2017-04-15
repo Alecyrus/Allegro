@@ -1,0 +1,13 @@
+AUTHORS
+ChangeLog
+LICENSE
+README.md
+setup.cfg
+setup.py
+enigma.egg-info/PKG-INFO
+enigma.egg-info/SOURCES.txt
+enigma.egg-info/dependency_links.txt
+enigma.egg-info/entry_points.txt
+enigma.egg-info/not-zip-safe
+enigma.egg-info/pbr.json
+enigma.egg-info/top_level.txt
