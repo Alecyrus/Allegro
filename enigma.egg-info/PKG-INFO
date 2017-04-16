@@ -1,13 +1,13 @@
 Metadata-Version: 1.1
 Name: enigma
-Version: 0.0.1
+Version: 0.0.2
 Summary: A Python Backend Framework
 Home-page: UNKNOWN
 Author: Junkai Huang
 Author-email: alecyrus@163.com
 License: UNKNOWN
 Description: # Enigma
-        Enima is a python backend integration framework, which provides a simple way to make the task of building any kind of RESTFul system. The RESTFul service is based on ![PEcAN](https://github.com/PecanProject/pecan/), and ![RabbitMQ](http://www.rabbitmq.com/) provides a message communication service.
+        Enima is a python backend integration framework, which provides a simple way to make the task of building any kind of RESTFul system easy and efficient. The RESTFul service is based on [PEcAN](https://github.com/PecanProject/pecan/), and [RabbitMQ](http://www.rabbitmq.com/) provides a message communication service.
         
         
 Platform: UNKNOWN

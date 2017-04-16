@@ -2,8 +2,17 @@ AUTHORS
 ChangeLog
 LICENSE
 README.md
+__init__.py
+requirement.txt
 setup.cfg
 setup.py
+dist/enigma-0.0.0.tar.gz
+dist/enigma-0.0.1.tar.gz
+enigma/controller.py
+enigma/enigma-register.ini
+enigma/enigma-server.ini
+enigma/enigma.py
+enigma/rpc_client.py
 enigma.egg-info/PKG-INFO
 enigma.egg-info/SOURCES.txt
 enigma.egg-info/dependency_links.txt
