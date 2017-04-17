@@ -2,13 +2,14 @@ from sanic import Sanic
 from sanic.response import json
 from sanic.response import text
 
-
+import os
 import configparser
-from controller import BaseView
-from rpc_client import RpcClient
+from core.controller import BaseView
+from core.rpc import RpcClient
 
 app = Sanic(__name__)
-INI_PATH = "enigma-server.ini"
+
+INI_PATH = "/home/luze/Enigma/enigma/config/enigma-server.ini"
 
 class Engine(object):
     def __init__(self):
@@ -25,16 +26,14 @@ class Engine(object):
 
     @app.middleware('request')
     async def halt_request(request):
-        print("before")
+        print("Before")
 
     @app.middleware('response')
     async def halt_response(request, response):
-        print("after")
+        print("After")
 
     def init_route(self, app):
         services = self.cf.get("service", "keys").split(',')
-        #print(type(services)) 
-        #print(len(services)) 
         for service in services:
             rpc_client = RpcClient()
             queue = self.cf.get(service, "queue") 
@@ -44,6 +43,9 @@ class Engine(object):
 
     def start(self, app):
         self.init_route(app)
+        with open("pid/process.pid", "a") as f:
+            f.write(str(os.getpid())+"\n")
+
         app.run(host=self.host, port=self.port, workers=self.wokers)
 
 
