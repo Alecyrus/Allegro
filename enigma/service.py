@@ -1,5 +1,5 @@
-import rpc
 import imp
+from . import rpc
 
 class BaseService(rpc.RpcServer):
     def __init__(self, queue, consumer, module, path):
@@ -9,8 +9,8 @@ class BaseService(rpc.RpcServer):
         self._init_rpc("localhost", self.queue)
         try:
             file, pathname, desc = imp.find_module(module,[path])
-            module = imp.load_module(consumer, file, pathname, desc)
-            self.consumer = "module.%s" % consumer
+            self.moduleobj = imp.load_module(consumer, file, pathname, desc)
+            self.consumer = "self.moduleobj.%s" % consumer
         except Exception as e:
             raise
 

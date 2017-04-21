@@ -2,7 +2,7 @@ import time
 
 from pprint import pprint
 
-from core.consumer import BaseConsumer
+from enigma.consumer import BaseConsumer
 
 
 
@@ -14,14 +14,14 @@ class TestConsumer(BaseConsumer):
         print("======================")
         pprint(message)
         print("======================")
-        return self._response("Received!!!", True)
+        return self._response("GET Received!!!", True)
 
     def post(self, message):
         print("==========POST======")
         pprint(message)
         print("======================")
         print("======================")
-        return self._response("Received!!!", True)
+        return self._response("POST Received!!!", True)
 
 
 

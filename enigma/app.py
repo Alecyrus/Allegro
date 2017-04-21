@@ -4,26 +4,28 @@ from sanic.response import text
 
 import os
 import configparser
-from controller import BaseView
-from rpc import RpcClient
-import log
+
+from .controller import BaseView
+from .rpc import RpcClient
+import logging
 
 
-from service import BaseService
+from .service import BaseService
 
 class Enigma(object):
     def __init__(self, name):
+        self.log = logging.getLogger('enigma')
 
-        if not logging.root.handlers and log.level == logging.NOTSET:
-            formatter = logging.Formatter(
-                        "%(asctime)s: %(levelname)s: %(message)s")
-            handler = logging.StreamHandler()
-            handler.setFormatter(formatter)
-            log.addHandler(handler)
-            log.setLevel(logging.INFO)
+
+        formatter = logging.Formatter(
+                    "%(asctime)s: %(levelname)s: %(message)s")
+        handler = logging.StreamHandler()
+        handler.setFormatter(formatter)
+        self.log.addHandler(handler)
+        self.log.setLevel(logging.INFO)
 
         self.app = Sanic(name)
-        self.pid_path = "/tmp/%s" self.name
+        self.pid_path = "/tmp/%s" % name
         open(self.pid_path,"w+").close()
 
     
@@ -40,7 +42,7 @@ class Enigma(object):
             self.consumer_path = self.cf.get("default", "consumer_path")
 
         except Exception as e:
-            log.exception("Error ocurred when trying to the config file Info: %s" % str(e))
+            self.log.exception("Error ocurred when trying to the config file Info: %s" % str(e))
             raise
 
     def init_route(self):
@@ -58,28 +60,36 @@ class Enigma(object):
             with open(self.pid_path, "a") as f:
                 f.write(str(os.getpid())+"\n")
 
-            self.app.run(host=self.host, port=self.port, workers=self.wokers)
-
-            self.services = self.cf.get("service", "keys").split(',')
+            #self.app.run(host=self.host, port=self.port, workers=self.wokers)
+            self.log.info("Starting Consumer service...")
+            services = self.cf.get("service", "keys").split(',')
             for service in services:
                 processList = []
-                workers = cf.getint(service, "workers")
-                consumer = cf.get(service, "consumer")
-                queue = cf.get(service, "queue")
-                module = cf.get(service, "module")
+                workers = self.cf.getint(service, "workers")
+                consumer = self.cf.get(service, "consumer")
+                queue = self.cf.get(service, "queue")
+                module = self.cf.get(service, "module")
                 for i in range(workers) :
                     try:
                         p = BaseService(queue, consumer, module, self.consumer_path)
                     except Exception as e:
-                        log.exception("Failed to import %s module from %s" % (self.consumer))
+                        self.log.exception("Failed to import %s module from %s" % (self.consumer))
                         raise
                     processList.append(p)
                     p.start()
                 for p in processList:
                     with open(self.pid_path, "a") as f:
                         f.write(str(p.pid)+"\n")
+            #self.init_route()
+            #with open(self.pid_path, "a") as f:
+            #    f.write(str(os.getpid())+"\n")
+            self.log.info("Starting API service...")
+
+            self.app.run(host=self.host, port=self.port, workers=self.wokers)
+
+
         except Exception as e:
-            log.exception("Error ocurred when trying to the config file Info: %s" % str(e))
+            self.log.exception("Error ocurred when trying to the config file Info: %s" % str(e))
             raise
 
     def stop(self):

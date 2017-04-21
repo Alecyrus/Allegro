@@ -23,14 +23,14 @@ class RpcClient(object):
     def __init__(self):
         #self.init_param()
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(
-            host=self.host, heartbeat_interval=0))
+            host=HOST, heartbeat_interval=0))
         self.channel = self.connection.channel()
         result = self.channel.queue_declare(exclusive=True)
         self.callback_queue = result.method.queue
         self.channel.exchange_declare(exchange=EXCHANGE,type='direct')
         self.channel.basic_consume(self.on_response, no_ack=True,
                                    queue=self.callback_queue)
-    def init_param(self):
+    #def init_param(self):
         #self.cf = configparser.ConfigParser()
         #self.cf.read(INI_PATH)
         #self.host = self.cf.get("rpc", "rpc_host")
@@ -83,12 +83,6 @@ class RpcServer(Process):
                                 queue=result.method.queue,
                                 routing_key=queue)
         self.channel.basic_consume(self._on_request, queue=queue, no_ack=False)
-
-    #def init_param(self):
-        #self.cf = configparser.ConfigParser()
-        #self.cf.read(INI_PATH)
-        #self.prefetch = self.cf.getint("rpc", "prefetch")
-        #self.exchange = self.cf.get("rpc", "exchange")
 
 
     def _on_request(self, ch, method, props, body):
