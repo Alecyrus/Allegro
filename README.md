@@ -1,27 +1,27 @@
-# Enigma
-![](https://travis-ci.org/Alecyrus/Enigma.svg?branch=master)
+# Allegro
+![](https://travis-ci.org/Alecyrus/Allegro.svg?branch=master)
 
 Enima is a python backend integration framework, which provides a simple way to make the task of building any kind of RESTFul system easy and efficient. The RESTFul service is based on [Sanix](https://github.com/channelcat/sanic), and [RabbitMQ](http://www.rabbitmq.com/) provides a message communication service. 
 
 With the framework, the API can be defined through a config file, and we just focus on the processing logic. What's more, it' very efficient and easy for frond-end to build a mock server.
 
 ## Installation
-> `pip3 install Engima`
+> `pip3 install allegro`
 
 It only supports Python3.5 or higher.
 
 ## Get Started
 ### main.py
 ```python
-from enigma import Enigma
-app = Enigma("test_project")
+from allegro import Allegro
+app = Allegro("test_project")
 app.initialize("test.ini")
 app.start()
 ```
 
 ### test.py
 ```python
-from enigma.consumer import BaseConsumer
+from allegro.consumer import BaseConsumer
 
 from pprint import pprint
 
@@ -95,4 +95,4 @@ you will get this respose:
 
 
 ## License
-Enigma is open source and released under the MIT Licence.
+Allegro is open source and released under the MIT Licence.
