@@ -3,7 +3,6 @@ appdirs>=1.4.3
 httptools>=0.0.9
 packaging>=16.8
 pika>=0.10.0
-pkg-resources>=0.0.0
 pyparsing>=2.2.0
 sanic>=0.5.1
 six>=1.10.0
