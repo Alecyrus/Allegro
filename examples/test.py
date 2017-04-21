@@ -1,6 +1,9 @@
-from enigma.consumer import BaseConsumer
+import time
 
 from pprint import pprint
+
+from enigma.consumer import BaseConsumer
+
 
 
 class TestConsumer(BaseConsumer):
