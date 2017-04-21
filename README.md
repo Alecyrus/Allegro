@@ -1,4 +1,6 @@
 # Allegro
+
+[![Join the chat at https://gitter.im/Alecyrus/Lobby](https://badges.gitter.im/Alecyrus/Lobby.svg)](https://gitter.im/Alecyrus/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![Build Status](https://travis-ci.org/Alecyrus/Allegro.svg?branch=master)
 ![PyPI version](https://img.shields.io/pypi/pyversions/allegro.svg)
 ![PyPI](https://img.shields.io/pypi/v/allegro.svg)
