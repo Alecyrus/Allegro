@@ -76,9 +76,9 @@ uri = /test1
 ;The message queue that the service uses
 queue = test1
 ;The level of the parameter. If you set it with the integer 2, json and url request can be both accepted.
-; 1 -> The json request(raw body) support.
-; 2 -> The url  request(http://api/uri?param1=value1&param2=value2) support.
-; 3 -> The form request(form body) support.
+; 1 -> The json request(raw body) supported.
+; 2 -> The url  request(http://api/uri?param1=value1&param2=value2) supported.
+; 3 -> The form request(form body) supported.
 params = 3
 ;The handler class of the service's requests.
 consumer = TestConsumer
