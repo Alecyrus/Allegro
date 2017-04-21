@@ -18,6 +18,7 @@ It only supports Python3.5 or higher.
 ### main.py
 ```python
 from allegro import Allegro
+
 app = Allegro("test_project")
 app.initialize("test.ini")
 app.start()
@@ -29,11 +30,10 @@ from allegro.consumer import BaseConsumer
 
 from pprint import pprint
 
-
 class TestConsumer(BaseConsumer):
     def __init__(self):
         super(TestConsumer, self).__init__()
-
+        
     def get(self, message):
         print("GET request received=============")
         pprint(message)
