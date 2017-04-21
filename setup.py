@@ -18,11 +18,11 @@ with codecs.open(os.path.join(os.path.abspath(os.path.dirname(
         raise RuntimeError('Unable to determine version.')
 
 setup_kwargs = {
-    'name': 'Enifma',
+    'name': 'Enigma',
     'version': version,
     'url': 'https://github.com/Alecyrus/Enigma',
     'license': 'MIT',
-    'author': 'Alecyrus,
+    'author': 'Alecyrus',
     'author_email': 'alecyrus@163.com',
     'description': (
         'A python backend integration framework'),
@@ -37,8 +37,8 @@ setup_kwargs = {
 }
 
 requirements = [
-    pika,
-    sanic,
+    'pika>=0.10.0',
+    'sanic>=0.5.1',
 ]
 try:
     setup_kwargs['install_requires'] = requirements

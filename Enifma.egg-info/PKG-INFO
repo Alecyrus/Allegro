@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: Enifma
+Version: 1.0.0
+Summary: A python backend integration framework
+Home-page: https://github.com/Alecyrus/Enigma
+Author: Alecyrus
+Author-email: alecyrus@163.com
+License: MIT
+Description: UNKNOWN
+Platform: any
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Environment :: Web Environment
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.5
