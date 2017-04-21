@@ -16,6 +16,12 @@ class TestConsumer(BaseConsumer):
         print("======================")
         return self._response("Received!!!", True)
 
+    def post(self, message):
+        print("==========POST======")
+        pprint(message)
+        print("======================")
+        print("======================")
+        return self._response("Received!!!", True)
 
 
 

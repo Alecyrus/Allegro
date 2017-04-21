@@ -7,31 +7,35 @@ import time
 from pprint import pprint
 import json
 import configparser
+import uuid
 
 from multiprocessing import Process
 
+#INI_PATH = "/home/luze/Enigma/enigma/config/enigma-server.ini"
 
+HOST = "localhost"
+TIMEOUT = 20
+EXCHANGE = "enigma::%s" % str(uuid.uuid1()).replace("-","")[:10]
+PREFETCH = 2
 
-
-INI_PATH = "/home/luze/Enigma/enigma/config/enigma-server.ini"
 
 class RpcClient(object):
     def __init__(self):
-        self.init_param()
+        #self.init_param()
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(
             host=self.host, heartbeat_interval=0))
         self.channel = self.connection.channel()
         result = self.channel.queue_declare(exclusive=True)
         self.callback_queue = result.method.queue
-        self.channel.exchange_declare(exchange=self.exchange,type='direct')
+        self.channel.exchange_declare(exchange=EXCHANGE,type='direct')
         self.channel.basic_consume(self.on_response, no_ack=True,
                                    queue=self.callback_queue)
     def init_param(self):
-        self.cf = configparser.ConfigParser()
-        self.cf.read(INI_PATH)
-        self.host = self.cf.get("rpc", "rpc_host")
-        self.timeout = self.cf.getfloat("rpc", "timeout")
-        self.exchange = self.cf.get("rpc", "exchange")
+        #self.cf = configparser.ConfigParser()
+        #self.cf.read(INI_PATH)
+        #self.host = self.cf.get("rpc", "rpc_host")
+        #self.timeout = self.cf.getfloat("rpc", "timeout")
+        #self.exchange = self.cf.get("rpc", "exchange")
 
 
 
@@ -43,7 +47,7 @@ class RpcClient(object):
     def call(self, message, queue):
         self.response = None
         self.corr_id = str(uuid.uuid4())
-        self.channel.basic_publish(exchange=self.exchange,
+        self.channel.basic_publish(exchange=EXCHANGE,
                                    routing_key=queue,
                                    properties=pika.BasicProperties(
                                        reply_to=self.callback_queue,
@@ -53,7 +57,7 @@ class RpcClient(object):
         start = time.time()
         while self.response is None:
             self.connection.process_data_events()
-            if time.time()-start > self.timeout: #if timeout raise error
+            if time.time()-start > TIMEOUT: #if timeout raise error
                 self.response = {'timeout':time.clock()}
         return self.response
 
@@ -65,31 +69,31 @@ class RpcServer(Process):
 
 
     def _init_rpc(self, amqp, queue):
-        self.init_param()
+        #self.init_param()
         #parameters = pika.URLParameters(amqp)
         #parameters = pika.ConnectionParameters(host=amqp)
         #conn = pika.BlockingConnection(parameters)
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=amqp))
         self.channel = connection.channel()
-        self.channel.exchange_declare(exchange=self.exchange, type='direct')
+        self.channel.exchange_declare(exchange=EXCHANGE, type='direct')
 
-        self.channel.basic_qos(prefetch_count=self.prefetch)
+        self.channel.basic_qos(prefetch_count=PREFETCH)
         result =  self.channel.queue_declare(queue=queue, durable=True)
-        self.channel.queue_bind(exchange=self.exchange,
+        self.channel.queue_bind(exchange=EXCHANGE,
                                 queue=result.method.queue,
                                 routing_key=queue)
         self.channel.basic_consume(self._on_request, queue=queue, no_ack=False)
 
-    def init_param(self):
-        self.cf = configparser.ConfigParser()
-        self.cf.read(INI_PATH)
-        self.prefetch = self.cf.getint("rpc", "prefetch")
-        self.exchange = self.cf.get("rpc", "exchange")
+    #def init_param(self):
+        #self.cf = configparser.ConfigParser()
+        #self.cf.read(INI_PATH)
+        #self.prefetch = self.cf.getint("rpc", "prefetch")
+        #self.exchange = self.cf.get("rpc", "exchange")
 
 
     def _on_request(self, ch, method, props, body):
         message = eval(body)
-        pprint(message)
+        #pprint(message)
 
         response = self.handler_request(message)
         ch.basic_publish(exchange='',
