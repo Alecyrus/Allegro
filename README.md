@@ -1,9 +1,9 @@
 # Allegro
 
 [![Join the chat at https://gitter.im/Alecyrus/Lobby](https://badges.gitter.im/Alecyrus/Lobby.svg)](https://gitter.im/Alecyrus/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-![Build Status](https://travis-ci.org/Alecyrus/Allegro.svg?branch=master)
-![PyPI version](https://img.shields.io/pypi/pyversions/allegro.svg)
-![PyPI](https://img.shields.io/pypi/v/allegro.svg)
+[![Build Status](https://travis-ci.org/Alecyrus/Allegro.svg?branch=master)](https://travis-ci.org/Alecyrus/Allegro)
+[![PyPI version](https://img.shields.io/pypi/pyversions/allegro.svg)](https://pypi.python.org/pypi/Allegro)
+[![PyPI](https://img.shields.io/pypi/v/allegro.svg)](https://pypi.python.org/pypi/Allegro)
 
 Enima is a python backend integration framework, which provides a simple way to make the task of building any kind of RESTFul system easy and efficient. The RESTFul service is based on [Sanix](https://github.com/channelcat/sanic), and [RabbitMQ](http://www.rabbitmq.com/) provides a message communication service. 
 
