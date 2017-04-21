@@ -5,13 +5,12 @@ With the framework, the API can be defined through a config file, and we just fo
 
 ## Installation
 > `pip3 install Engima`
+
 It only supports Python3.5 or higher.
 
-## Usage
-
-## A simple example
+## Get Started
 ### main.py
-```
+```python
 from enigma import Enigma
 app = Enigma("test_project")
 app.initialize("test.ini")
@@ -19,7 +18,7 @@ app.start()
 ```
 
 ### test.py
-```
+```python
 from enigma.consumer import BaseConsumer
 
 from pprint import pprint
@@ -44,7 +43,7 @@ class TestConsumer(BaseConsumer):
 
 ```
 ### test.ini
-```
+```python
 default]
 ;The ip address of the host you runs the RESTFul API service
 bind_host = 0.0.0.0
@@ -88,8 +87,10 @@ Run the command:
 
 If you send the request:
 > `curl  -H "Accept: application/json" -d "Name=Alecyrus&Age=20" http://$iP:$port/test1`
+
 you will get this respose:
 >`{"info":"Your name is Alecyrus, and you are 20 years old.","state":1}`
 
 
-
+## License
+Enigma is open source and released under the MIT Licence.
