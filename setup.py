@@ -10,7 +10,7 @@ from distutils.util import strtobool
 from setuptools import setup
 
 with codecs.open(os.path.join(os.path.abspath(os.path.dirname(
-        __file__)), 'enigma', '__init__.py'), 'r', 'latin1') as fp:
+        __file__)), 'allegro', '__init__.py'), 'r', 'latin1') as fp:
     try:
         version = re.findall(r"^__version__ = '([^']+)'\r?$",
                              fp.read(), re.M)[0]
@@ -18,7 +18,7 @@ with codecs.open(os.path.join(os.path.abspath(os.path.dirname(
         raise RuntimeError('Unable to determine version.')
 
 setup_kwargs = {
-    'name': 'Enigma',
+    'name': 'Allegro',
     'version': version,
     'url': 'https://github.com/Alecyrus/Enigma',
     'license': 'MIT',
@@ -26,7 +26,7 @@ setup_kwargs = {
     'author_email': 'alecyrus@163.com',
     'description': (
         'A python backend integration framework'),
-    'packages': ['enigma'],
+    'packages': ['allegro'],
     'platforms': 'any',
     'classifiers': [
         'Development Status :: 2 - Pre-Alpha',

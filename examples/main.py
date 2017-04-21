@@ -1,7 +1,7 @@
-from enigma import Enigma
+from allegro import Allegro
 
 
-app = Enigma("test_project")
+app = Allegro("test_project")
 app.initialize("test.ini")
 app.start()
 

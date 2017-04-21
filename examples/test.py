@@ -2,7 +2,7 @@ import time
 
 from pprint import pprint
 
-from enigma.consumer import BaseConsumer
+from allegro.consumer import BaseConsumer
 
 
 

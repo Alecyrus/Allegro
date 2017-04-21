@@ -15,7 +15,7 @@ from multiprocessing import Process
 
 HOST = "localhost"
 TIMEOUT = 20
-EXCHANGE = "enigma::%s" % str(uuid.uuid1()).replace("-","")[:10]
+EXCHANGE = "allegro::%s" % str(uuid.uuid1()).replace("-","")[:10]
 PREFETCH = 2
 
 

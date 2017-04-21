@@ -12,9 +12,9 @@ import logging
 
 from .service import BaseService
 
-class Enigma(object):
+class Allegro(object):
     def __init__(self, name):
-        self.log = logging.getLogger('enigma')
+        self.log = logging.getLogger('allegro')
 
 
         formatter = logging.Formatter(
