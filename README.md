@@ -50,7 +50,7 @@ class TestConsumer(BaseConsumer):
 ```
 ### test.ini
 ```
-default]
+[default]
 ;The ip address of the host you runs the RESTFul API service
 bind_host = 0.0.0.0
 ;The port
