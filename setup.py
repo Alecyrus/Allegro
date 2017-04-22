@@ -20,7 +20,7 @@ with codecs.open(os.path.join(os.path.abspath(os.path.dirname(
 setup_kwargs = {
     'name': 'Allegro',
     'version': version,
-    'url': 'https://github.com/Alecyrus/Enigma',
+    'url': 'https://github.com/Alecyrus/Allegro',
     'license': 'MIT',
     'author': 'Alecyrus',
     'author_email': 'alecyrus@163.com',
