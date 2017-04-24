@@ -62,7 +62,7 @@ consumer_path = /home/luze/Enigma/tests
 
 
 [service]
-;The services your projects provided. If you want to define more than
+;The services your project provided. If you want to define more than
 ;one service, separate each service's name by a comma. And then you must 
 ;define every service's specific information with a section named after
 ;the service'name.
