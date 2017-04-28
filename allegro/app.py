@@ -4,11 +4,13 @@ from sanic.response import text
 
 import os
 import configparser
+import signal
 
 from .controller import BaseView
 from .rpc import RpcClient
 import logging
 
+from asyncio import get_event_loop
 
 from .service import BaseService
 
@@ -25,8 +27,6 @@ class Allegro(object):
         self.log.setLevel(logging.INFO)
 
         self.app = Sanic(name)
-        self.pid_path = "/tmp/%s" % name
-        open(self.pid_path,"w+").close()
 
     
     def initialize(self, config_path):
@@ -40,6 +40,8 @@ class Allegro(object):
             self.port = self.cf.getint("default", "bind_port")
             self.wokers = self.cf.getint("default", "api_worker")
             self.consumer_path = self.cf.get("default", "consumer_path")
+            self.pid_path = self.cf.get("default", "pid_path")
+            #open(self.pid_path,"w+").close()
 
         except Exception as e:
             self.log.exception("Error ocurred when trying to the config file Info: %s" % str(e))
@@ -57,6 +59,7 @@ class Allegro(object):
     def start(self):
         try:
             self.init_route()
+            print(self.pid_path)
             with open(self.pid_path, "a") as f:
                 f.write(str(os.getpid())+"\n")
 
@@ -80,26 +83,30 @@ class Allegro(object):
                 for p in processList:
                     with open(self.pid_path, "a") as f:
                         f.write(str(p.pid)+"\n")
-            #self.init_route()
-            #with open(self.pid_path, "a") as f:
-            #    f.write(str(os.getpid())+"\n")
-            self.log.info("Starting API service...")
+            self.log.info("Stiiiarting API service...")
 
-            self.app.run(host=self.host, port=self.port, workers=self.wokers)
+            self.app.run(host=self.host, port=self.port, workers=self.wokers, after_start=self.save_pid)
 
 
         except Exception as e:
             self.log.exception("Error ocurred when trying to the config file Info: %s" % str(e))
             raise
+    def save_pid(self, app, loop):
+        with open(self.pid_path, "a") as f:
+            f.write(str(os.getpid())+"\n")
 
     def stop(self):
         try:
-            self.app.stop()
+            self.log.info("Staring to termina the processes...")
             with open(self.pid_path, "r") as f:
                 processes = f.readlines()
                 for p in processes:
-                    os.kill(pid, signal.SIGKILL)
+                    try:
+                        a = os.kill(int(p[:-1]), signal.SIGKILL)
+                    except Exception as e:
+                        self.log.error(e)
             open(self.pid_path, "w+")
+            self.log.info("All the processes are terminated.")
         except Exception as e:
             log.exception("Error ocurred when trying to kill the processes Info: %s" % str(e)) 
             raise

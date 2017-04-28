@@ -59,6 +59,8 @@ bind_port = 8000
 api_worker = 2
 ;The directory where the consumer modules you defined can be found 
 consumer_path = /home/luze/Enigma/tests
+;The file that contains the pids of all the process
+pid_path = /tmp/my_project_pid_file
 
 
 [service]
