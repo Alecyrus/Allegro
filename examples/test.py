@@ -19,7 +19,8 @@ class TestConsumer(BaseConsumer):
     def post(self, message):
         print("POST request received============")
         pprint(message)
-        resp = "Your name is %s, and you are %s years old." % (message['form_content']["Name"][0], message['form_content']["Age"][0])
+        #resp = "Your name is %s, and you are %s years old." % (message['form_content']["Name"][0], message['form_content']["Age"][0])
+        resp = "asdasdas"
         print("=================================")
         return self._response(resp, True)
 

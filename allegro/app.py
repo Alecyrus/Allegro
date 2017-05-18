@@ -84,16 +84,19 @@ class Allegro(object):
                     with open(self.pid_path, "a") as f:
                         f.write(str(p.pid)+"\n")
             self.log.info("Stiiiarting API service...")
-
-            self.app.run(host=self.host, port=self.port, workers=self.wokers, after_start=self.save_pid)
+            self.app.add_task(self.save_pid())
+            self.app.run(host=self.host, port=self.port, workers=self.wokers)
 
 
         except Exception as e:
             self.log.exception("Error ocurred when trying to the config file Info: %s" % str(e))
             raise
-    def save_pid(self, app, loop):
+
+    #@self.app.listener('after_server_start')
+    async def save_pid(self):
         with open(self.pid_path, "a") as f:
             f.write(str(os.getpid())+"\n")
+        await asyncio.sleep(1)
 
     def stop(self):
         try:
