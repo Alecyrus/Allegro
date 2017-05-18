@@ -18,7 +18,6 @@ class Allegro(object):
     def __init__(self, name):
         self.log = logging.getLogger('allegro')
 
-
         formatter = logging.Formatter(
                     "%(asctime)s: %(levelname)s: %(message)s")
         handler = logging.StreamHandler()
@@ -59,7 +58,6 @@ class Allegro(object):
     def start(self):
         try:
             self.init_route()
-            print(self.pid_path)
             with open(self.pid_path, "a") as f:
                 f.write(str(os.getpid())+"\n")
 

@@ -30,13 +30,6 @@ class RpcClient(object):
         self.channel.exchange_declare(exchange=EXCHANGE,type='direct')
         self.channel.basic_consume(self.on_response, no_ack=True,
                                    queue=self.callback_queue)
-    #def init_param(self):
-        #self.cf = configparser.ConfigParser()
-        #self.cf.read(INI_PATH)
-        #self.host = self.cf.get("rpc", "rpc_host")
-        #self.timeout = self.cf.getfloat("rpc", "timeout")
-        #self.exchange = self.cf.get("rpc", "exchange")
-
 
 
     def on_response(self, ch, method, props, body):
@@ -69,10 +62,6 @@ class RpcServer(Process):
 
 
     def _init_rpc(self, amqp, queue):
-        #self.init_param()
-        #parameters = pika.URLParameters(amqp)
-        #parameters = pika.ConnectionParameters(host=amqp)
-        #conn = pika.BlockingConnection(parameters)
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=amqp))
         self.channel = connection.channel()
         self.channel.exchange_declare(exchange=EXCHANGE, type='direct')
@@ -87,7 +76,6 @@ class RpcServer(Process):
 
     def _on_request(self, ch, method, props, body):
         message = eval(body)
-        #pprint(message)
 
         response = self.handler_request(message)
         ch.basic_publish(exchange='',
