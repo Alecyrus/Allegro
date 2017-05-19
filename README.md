@@ -61,6 +61,8 @@ api_worker = 2
 consumer_path = /home/luze/Enigma/tests
 ;The file that contains the pids of all the process
 pid_path = /tmp/my_project_pid_file
+;Timeout(second)
+timeout = 60 
 
 
 [service]

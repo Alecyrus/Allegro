@@ -26,20 +26,21 @@ class BaseView(HTTPMethodView):
 
   async def get(self, request):
       response = self.rpc_client.call(self.request_to_message(request, "GET"), self.queue)
-      return json(eval(response))
+      return json(eval(str(response)))
 
   async def post(self, request):
+
       response = self.rpc_client.call(self.request_to_message(request, "POST"), self.queue)
-      return json(eval(response))
+      return json(eval(str(response)))
 
   async def put(self, request):
       response = self.rpc_client.call(self.request_to_message(request, "PUT"), self.queue)
-      return json(eval(response))
+      return json(eval(str(response)))
 
   async def patch(self, request):
       response = self.rpc_client.call(self.request_to_message(request, "PATCH"), self.queue)
-      return json(eval(response))
+      return json(eval(str(response)))
 
   async def delete(self, request):
       response = self.rpc_client.call(self.request_to_message(request, "DELETE"), self.queue)
-      return json(eval(response))
+      return json(eval(str(response)))

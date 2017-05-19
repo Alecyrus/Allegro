@@ -3,7 +3,7 @@ import time
 from pprint import pprint
 
 from allegro.consumer import BaseConsumer
-
+import time
 
 
 class TestConsumer(BaseConsumer):
@@ -18,8 +18,10 @@ class TestConsumer(BaseConsumer):
 
     def post(self, message):
         print("POST request received============")
+                 
         pprint(message)
-        #resp = "Your name is %s, and you are %s years old." % (message['form_content']["Name"][0], message['form_content']["Age"][0])
+        #time.sleep(3)
+        resp = "Your name is %s, and you are %s years old." % (message['form_content']["Name"][0], message['form_content']["Age"][0])
         resp = "asdasdas"
         print("=================================")
         return self._response(resp, True)

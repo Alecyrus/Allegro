@@ -1,5 +1,6 @@
 from sanic import Sanic
 from sanic.response import json
+from sanic.config import Config
 from sanic.response import text
 
 import os
@@ -14,6 +15,7 @@ from asyncio import get_event_loop
 
 from .service import BaseService
 
+#Config.REQUEST_TIMEOUT = 2
 class Allegro(object):
     def __init__(self, name):
         self.log = logging.getLogger('allegro')
@@ -26,7 +28,6 @@ class Allegro(object):
         self.log.setLevel(logging.INFO)
 
         self.app = Sanic(name)
-
     
     def initialize(self, config_path):
          
@@ -34,13 +35,13 @@ class Allegro(object):
             self.cf = configparser.ConfigParser()
             self.cf.read(config_path)
          
-            # SERVER
             self.host = self.cf.get("default", "bind_host")
             self.port = self.cf.getint("default", "bind_port")
             self.wokers = self.cf.getint("default", "api_worker")
             self.consumer_path = self.cf.get("default", "consumer_path")
             self.pid_path = self.cf.get("default", "pid_path")
-            #open(self.pid_path,"w+").close()
+            self.timeout = self.cf.getint("default", "timeout")
+            self.app.config.REQUEST_TIMEOUT=self.timeout
 
         except Exception as e:
             self.log.exception("Error ocurred when trying to the config file Info: %s" % str(e))
@@ -49,7 +50,7 @@ class Allegro(object):
     def init_route(self):
         services = self.cf.get("service", "keys").split(',')
         for service in services:
-            rpc_client = RpcClient()
+            rpc_client = RpcClient(self.timeout)
             queue = self.cf.get(service, "queue") 
             uri = self.cf.get(service, "uri")
             params =  self.cf.getint(service, "params")
@@ -90,11 +91,9 @@ class Allegro(object):
             self.log.exception("Error ocurred when trying to the config file Info: %s" % str(e))
             raise
 
-    #@self.app.listener('after_server_start')
     async def save_pid(self):
         with open(self.pid_path, "a") as f:
             f.write(str(os.getpid())+"\n")
-        await asyncio.sleep(1)
 
     def stop(self):
         try:

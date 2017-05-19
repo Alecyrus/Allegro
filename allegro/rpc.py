@@ -14,14 +14,13 @@ from multiprocessing import Process
 #INI_PATH = "/home/luze/Enigma/enigma/config/enigma-server.ini"
 
 HOST = "localhost"
-TIMEOUT = 20
 EXCHANGE = "allegro::%s" % str(uuid.uuid1()).replace("-","")[:10]
 PREFETCH = 2
 
 
 class RpcClient(object):
-    def __init__(self):
-        #self.init_param()
+    def __init__(self, timeout):
+        self.timeout = timeout
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(
             host=HOST, heartbeat_interval=0))
         self.channel = self.connection.channel()
@@ -30,7 +29,6 @@ class RpcClient(object):
         self.channel.exchange_declare(exchange=EXCHANGE,type='direct')
         self.channel.basic_consume(self.on_response, no_ack=True,
                                    queue=self.callback_queue)
-
 
     def on_response(self, ch, method, props, body):
         if self.corr_id == props.correlation_id:
@@ -50,8 +48,8 @@ class RpcClient(object):
         start = time.time()
         while self.response is None:
             self.connection.process_data_events()
-            if time.time()-start > TIMEOUT: #if timeout raise error
-                self.response = {'timeout':time.clock()}
+            if time.time()-start > self.timeout: #if timeout raise error
+                self.response = {'info':'time out', 'state':0}
         return self.response
 
 
