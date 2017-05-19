@@ -37,7 +37,6 @@ class Allegro(object):
          
             self.host = self.cf.get("default", "bind_host")
             self.port = self.cf.getint("default", "bind_port")
-            self.wokers = self.cf.getint("default", "api_worker")
             self.consumer_path = self.cf.get("default", "consumer_path")
             self.pid_path = self.cf.get("default", "pid_path")
             self.timeout = self.cf.getint("default", "timeout")
@@ -84,7 +83,7 @@ class Allegro(object):
                         f.write(str(p.pid)+"\n")
             self.log.info("Stiiiarting API service...")
             self.app.add_task(self.save_pid())
-            self.app.run(host=self.host, port=self.port, workers=self.wokers)
+            self.app.run(host=self.host, port=self.port)
 
 
         except Exception as e:

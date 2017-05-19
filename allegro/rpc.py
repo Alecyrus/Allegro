@@ -15,7 +15,7 @@ from multiprocessing import Process
 
 HOST = "localhost"
 EXCHANGE = "allegro::%s" % str(uuid.uuid1()).replace("-","")[:10]
-PREFETCH = 2
+PREFETCH = 1
 
 
 class RpcClient(object):
@@ -49,7 +49,7 @@ class RpcClient(object):
         while self.response is None:
             self.connection.process_data_events()
             if time.time()-start > self.timeout: #if timeout raise error
-                self.response = {'info':'time out', 'state':0}
+                self.response = str({'info':'time out', 'state':0})
         return self.response
 
 
@@ -65,7 +65,7 @@ class RpcServer(Process):
         self.channel.exchange_declare(exchange=EXCHANGE, type='direct')
 
         self.channel.basic_qos(prefetch_count=PREFETCH)
-        result =  self.channel.queue_declare(queue=queue, durable=True)
+        result = self.channel.queue_declare(queue=queue, durable=False)
         self.channel.queue_bind(exchange=EXCHANGE,
                                 queue=result.method.queue,
                                 routing_key=queue)
