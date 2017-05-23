@@ -5,6 +5,7 @@ from pprint import pprint
 
 from allegro.consumer import BaseConsumer
 import time
+import asyncio
 
 
 class TestConsumer(BaseConsumer):
@@ -15,15 +16,16 @@ class TestConsumer(BaseConsumer):
         print("GET request received=============")
         pprint(message)
         print("=================================")
-        return self._response("GET Received!!!", True)
 
     def post(self, message):
         print("POST request received============")
                  
         print(os.getpid())
-        time.sleep(1)
+        #print ("Starting")
+        time.sleep(5)
+        #print ("End")
         #resp = "Your name is %s, and you are %s years old." % (message['form_content']["Name"][0], message['form_content']["Age"][0])
-        resp = "asdasdas"
+        resp = "Post Got"
         print("=================================")
         return self._response(resp, True)
 

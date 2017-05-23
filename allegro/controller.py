@@ -1,55 +1,91 @@
+import time
+import imp
+import asyncio
+
 from sanic.views import HTTPMethodView
 from sanic.response import text
 from sanic.response import json
-from pprint import pprint
-#import time
-
-#ISOTIMEFORMAT='%Y-%m-%d %X'
+from sanic.exceptions import ServerError
 
 class BaseView(HTTPMethodView):
-  def __init__(self, queue, rpc_client, params):
-      self.queue = queue
-      self.rpc_client = rpc_client
-      self.params = params
+  def __init__(self, method, module, path, timeout):
+      self.method = method
+      try: 
+          file, pathname, desc = imp.find_module(module,[path])
+          self.moduleobj = imp.load_module(module, file, pathname, desc)
+      except Exception as e:
+          raise
 
-  def request_to_message(self, request, optype):
+  def request_to_message(self, request):
       message = dict()
-      message["optype"] = optype
-      if self.params > 0:
-          try:
-              message["json_content"] = request.json
-          except Exception:
-              pass
-      if self.params > 1:
+      try:
+          message["json_content"] = request.json
           message["url_content"] = request.args
-      if self.params > 2:
           message["form_content"] = request.form
+      except Exception:
+          pass
       return message
 
+  def return_check(self, response):
+      if isinstance(response, dict):
+          return json(response)
+      else:
+          raise ServerError("The `dict` is expected. Please check the type of the callback", status_code=401)
+
+
   async def get(self, request):
-      response = self.rpc_client.call(self.request_to_message(request, "GET"), self.queue)
-      return json(eval(response))
+      if 'get' not in self.method:
+          return ServerError("Not support", status_code=400)
+      message = self.request_to_message(request)
+      handler = "self.moduleobj.get.delay"
+      callback = eval(handler)(message)
+      while(not callback.ready()):
+          await asyncio.sleep(1)      
+      response = callback.result
+      return self.return_check(response)
 
   async def post(self, request):
-      #print("start: ", end='')
-      #print (time.strftime(ISOTIMEFORMAT, time.localtime()))
+      if 'post' not in self.method:
+          return ServerError("Not support", status_code=400)
+      message = self.request_to_message(request)
+      handler = "self.moduleobj.post.delay"
+      callback = eval(handler)(message)
+      while(not callback.ready()):
+          await asyncio.sleep(1)      
+      response = callback.result
+      print(type(response))
 
-      response = self.rpc_client.call(self.request_to_message(request, "POST"), self.queue)
-      #print("=========")
-      #print(response)
-      #print("end: ", end='')
-      #print (time.strftime(ISOTIMEFORMAT, time.localtime()))
-      #print("=========")
-      return json(eval(response))
+      return self.return_check(response)
 
   async def put(self, request):
-      response = self.rpc_client.call(self.request_to_message(request, "PUT"), self.queue)
-      return json(eval(response))
+      if 'put' not in self.method:
+          return ServerError("Not support", status_code=400)
+      message = self.request_to_message(request)
+      handler = "self.moduleobj.put.delay"
+      callback = eval(handler)(message)
+      while(not callback.ready()):
+          await asyncio.sleep(1)      
+      response = callback.result
+      return self.return_check(response)
 
   async def patch(self, request):
-      response = self.rpc_client.call(self.request_to_message(request, "PATCH"), self.queue)
-      return json(eval(response))
-
+      if 'patch' not in self.method:
+          return ServerError("Not support", status_code=400)
+      message = self.request_to_message(request)
+      handler = "self.moduleobj.patch.delay"
+      callback = eval(handler)(message)
+      while(not callback.ready()):
+          await asyncio.sleep(1)      
+      response = callback.result
+      return self.return_check(response)
+  
   async def delete(self, request):
-      response = self.rpc_client.call(self.request_to_message(request, "DELETE"), self.queue)
-      return json(eval(response))
+      if 'delete' not in self.method:
+          return ServerError("Not support", status_code=400)
+      message = self.request_to_message(request)
+      handler = "self.moduleobj.delete.delay"
+      callback = eval(handler)(message)
+      while(not callback.ready()):
+          await asyncio.sleep(1)      
+      response = callback.result
+      return self.return_check(response)
