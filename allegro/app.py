@@ -36,7 +36,6 @@ class Allegro(object):
             self.root_path = self.cf.get("default", "root_path")
             self.api_worker = self.cf.getint("default", "api_worker")
             self.pid_path = self.cf.get("default", "pid_path")
-            self.log_level = self.cf.get("default", "log_level").replace(' ', '')
             self.timeout = self.cf.getint("default", "timeout")
             self.eventlet_enabled = eval(self.cf.get("default", "eventlet_enabled"))
             if self.eventlet_enabled:
@@ -67,10 +66,10 @@ class Allegro(object):
                 module = self.cf.get(service, "module")
                 workers = self.cf.getint(service, "workers")
                 if self.eventlet_enabled:
-                    subprocess.call('celery worker -A %s --concurrency %s   -l info -P eventlet -c %s -n%s &' % (module, workers, self.max_eventlet, module), shell=True)
+                    subprocess.call('celery worker -A %s --concurrency %s   -l info -P eventlet -c %s -n %s &' % (module, workers, self.max_eventlet, module), shell=True)
                     
                 else:
-                    subprocess.call('celery worker -A %s --concurrency %s   -l info -n%s &' % (module, workers, module), shell=True)
+                    subprocess.call('celery worker -A %s --concurrency %s   -l info -n %s &' % (module, workers, module), shell=True)
 
                 #subprocess.call('celery worker -A %s --concurrency %s   -l info -P eventlet -c %s -n%s &' % (module, workers, self.max_eventlet, module), shell=True)
                 
