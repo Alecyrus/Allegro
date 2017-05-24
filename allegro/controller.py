@@ -19,9 +19,9 @@ class BaseView(HTTPMethodView):
   def request_to_message(self, request):
       message = dict()
       try:
-          message["json_content"] = request.json
           message["url_content"] = request.args
           message["form_content"] = request.form
+          message["json_content"] = request.json
       except Exception:
           pass
       return message

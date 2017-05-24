@@ -53,7 +53,7 @@ def post(message):
 ```
 ### settings.ini
 ```ini
-[default]
+[basic]
 ;The ip address of the host you runs the RESTFul API service
 bind_host = 0.0.0.0
 ;The port
@@ -66,9 +66,6 @@ root_path = /home/luze/Code/Allegro/examples
 pid_path = /tmp/my_project_pid_file
 ;Timeout
 timeout = 60
-;use eventlet  
-eventlet_enabled = True
-max_eventlet = 1000
 
 [service]
 ;The services your projects provided. If you want to define more than
@@ -88,11 +85,14 @@ method = get,post
 module = task1
 ;The number of the service processes. If the value of eventlet_enabled is True, the item will be of no effect
 workers = 1
+;use eventlet  
+eventlet_enabled = True
+max_eventlet = 1000
 ```
 
 
 #### Run the command:
-> `# python3 main.py`
+> `# python3 start.py`
 
 #### Call the API(example: http://localhost:8000/test1 (POST))
 

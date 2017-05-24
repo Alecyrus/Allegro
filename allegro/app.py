@@ -4,13 +4,14 @@ import logging
 import signal
 import subprocess
 
-from .controller import BaseView
 from asyncio import get_event_loop
 from sanic import Sanic
 from sanic.response import json
 from sanic.config import Config
 from sanic.response import text
 
+
+from .controller import BaseView
 
 class Allegro(object):
     def __init__(self, name):
@@ -31,15 +32,12 @@ class Allegro(object):
             self.cf = configparser.ConfigParser()
             self.cf.read(config_path)
          
-            self.host = self.cf.get("default", "bind_host")
-            self.port = self.cf.getint("default", "bind_port")
-            self.root_path = self.cf.get("default", "root_path")
-            self.api_worker = self.cf.getint("default", "api_worker")
-            self.pid_path = self.cf.get("default", "pid_path")
-            self.timeout = self.cf.getint("default", "timeout")
-            self.eventlet_enabled = eval(self.cf.get("default", "eventlet_enabled"))
-            if self.eventlet_enabled:
-                self.max_eventlet = self.cf.getint("default", "max_eventlet")
+            self.host = self.cf["basic"]["bind_host"]
+            self.port = int(self.cf["basic"]["bind_port"])
+            self.root_path = self.cf["basic"]["root_path"]
+            self.api_worker = int(self.cf["basic"]["api_worker"])
+            self.pid_path = self.cf["basic"]["pid_path"]
+            self.timeout = int(self.cf["basic"]["timeout"])
             self.app.config.REQUEST_TIMEOUT=self.timeout
 
         except Exception as e:
@@ -47,11 +45,11 @@ class Allegro(object):
             raise
 
     def init_route(self):
-        services = self.cf.get("service", "keys").split(',')
+        services = self.cf["service"]["keys"].replace(' ', '').split(',')
         for service in services:
-            uri = self.cf.get(service, "uri")
-            module = self.cf.get(service, "module")
-            method = self.cf.get(service, "method").lower().replace(' ','').split(',')
+            uri = self.cf[service]["uri"]
+            module = self.cf[service]["module"]
+            method = self.cf[service]["method"].lower().replace(' ','').split(',')
             self.app.add_route(BaseView.as_view(method, module, self.root_path, self.timeout), uri)
 
     def start(self):
@@ -60,19 +58,19 @@ class Allegro(object):
             with open(self.pid_path, "a") as f:
                 f.write(str(os.getpid())+"\n")
 
-            services = self.cf.get("service", "keys").split(',')
+            services = self.cf["service"]["keys"].split(',')
             os.system('cd %s' % self.root_path)
             for service in services:
-                module = self.cf.get(service, "module")
-                workers = self.cf.getint(service, "workers")
-                if self.eventlet_enabled:
-                    subprocess.call('celery worker -A %s --concurrency %s   -l info -P eventlet -c %s -n %s &' % (module, workers, self.max_eventlet, module), shell=True)
+                module = self.cf[service]["module"]
+                workers = int(self.cf[service]["workers"])
+                eventlet_enabled = eval(self.cf[service]['eventlet_enabled'])
+                if eventlet_enabled:
+                    eventlet_pool = int(self.cf[service]["eventlet_pool"])
+                    subprocess.call('celery worker -A %s --concurrency %s   -l info -P eventlet -c %s -n %s &' % (module, workers, eventlet_pool, module), shell=True)
                     
                 else:
                     subprocess.call('celery worker -A %s --concurrency %s   -l info -n %s &' % (module, workers, module), shell=True)
 
-                #subprocess.call('celery worker -A %s --concurrency %s   -l info -P eventlet -c %s -n%s &' % (module, workers, self.max_eventlet, module), shell=True)
-                
             self.log.info("Starting Consumer service...")
             self.app.add_task(self.save_pid())
             self.app.run(host=self.host, port=self.port, workers=self.api_worker)
