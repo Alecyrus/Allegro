@@ -83,11 +83,12 @@ uri = /test1
 method = get,post
 ;The module where the handler class is located
 module = task1
-;The number of the service processes. If the value of eventlet_enabled is True, the item will be of no effect
-workers = 1
+;The number of the service workers. If the value of eventlet_enabled is True, the item will be of no effect
+workers = 3
+processes_pool = 10
 ;use eventlet  
 eventlet_enabled = True
-max_eventlet = 1000
+eventlet_pool = 1000
 ```
 
 

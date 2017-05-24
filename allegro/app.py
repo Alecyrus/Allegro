@@ -62,14 +62,15 @@ class Allegro(object):
             os.system('cd %s' % self.root_path)
             for service in services:
                 module = self.cf[service]["module"]
-                workers = int(self.cf[service]["workers"])
                 eventlet_enabled = eval(self.cf[service]['eventlet_enabled'])
                 if eventlet_enabled:
                     eventlet_pool = int(self.cf[service]["eventlet_pool"])
                     subprocess.call('celery worker -A %s --concurrency %s   -l info -P eventlet -c %s -n %s &' % (module, workers, eventlet_pool, module), shell=True)
                     
                 else:
-                    subprocess.call('celery worker -A %s --concurrency %s   -l info -n %s &' % (module, workers, module), shell=True)
+                    workers = int(self.cf[service]["workers"])
+                    for i in range(workers):
+                        subprocess.call('celery worker -A %s --concurrency %s   -l info -n %s%s &' % (module, workers, module, i), shell=True)
 
             self.log.info("Starting Consumer service...")
             self.app.add_task(self.save_pid())
