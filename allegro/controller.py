@@ -53,8 +53,6 @@ class BaseView(HTTPMethodView):
       while(not callback.ready()):
           await asyncio.sleep(1)      
       response = callback.result
-      print(type(response))
-
       return self.return_check(response)
 
   async def put(self, request):
