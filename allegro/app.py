@@ -65,7 +65,7 @@ class Allegro(object):
                 eventlet_enabled = eval(self.cf[service]['eventlet_enabled'])
                 if eventlet_enabled:
                     eventlet_pool = int(self.cf[service]["eventlet_pool"])
-                    subprocess.call('celery worker -A %s --concurrency 1   -l info -P eventlet -c %s -n %s &' % (mu, eventlet_pool, module), shell=True)
+                    subprocess.call('celery worker -A %s --concurrency 1   -l info -P eventlet -c %s -n %s &' % (module, eventlet_pool, module), shell=True)
                 else:
                     workers = int(self.cf[service]["workers"])
                     for i in range(workers):
