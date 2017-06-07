@@ -9,11 +9,13 @@ app = Celery('tasks', backend='redis://localhost:6379/0', broker = 'redis://loca
 
 @app.task
 def get(message):
-    pprint(message)
+    #===========
+    #pprint(message)
+    #===========
     return {"app":"Get Got"}
 
 @app.task
 def post(message):
-    pprint(message)
+    #print(message)
     return {"app":"Post Got"}
 

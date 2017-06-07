@@ -49,8 +49,9 @@ class Allegro(object):
         for service in services:
             uri = self.cf[service]["uri"]
             module = self.cf[service]["module"]
+            file_upload = self.cf[service]["file_upload_enable"]
             method = self.cf[service]["method"].lower().replace(' ','').split(',')
-            self.app.add_route(BaseView.as_view(method, module, self.root_path, self.timeout), uri)
+            self.app.add_route(BaseView.as_view(method, module, self.root_path, self.timeout, file_upload), uri)
 
     def start(self):
         try:

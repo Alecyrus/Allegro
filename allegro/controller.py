@@ -8,8 +8,9 @@ from sanic.response import json
 from sanic.exceptions import ServerError
 
 class BaseView(HTTPMethodView):
-  def __init__(self, method, module, path, timeout):
+  def __init__(self, method, module, path, timeout, file_upload = False):
       self.method = method
+      self.file_upload = file_upload
       try: 
           file, pathname, desc = imp.find_module(module,[path])
           self.moduleobj = imp.load_module(module, file, pathname, desc)
@@ -32,7 +33,6 @@ class BaseView(HTTPMethodView):
       else:
           raise ServerError("The `dict` is expected. Please check the type of the callback", status_code=401)
 
-
   async def get(self, request):
       if 'get' not in self.method:
           return ServerError("Not support", status_code=400)
@@ -48,6 +48,8 @@ class BaseView(HTTPMethodView):
       if 'post' not in self.method:
           return ServerError("Not support", status_code=400)
       message = self.request_to_message(request)
+      if self.file_upload:
+           message = request
       handler = "self.moduleobj.post.delay"
       callback = eval(handler)(message)
       while(not callback.ready()):
