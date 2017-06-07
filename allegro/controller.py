@@ -8,7 +8,7 @@ from sanic.response import json
 from sanic.exceptions import ServerError
 
 class BaseView(HTTPMethodView):
-  def __init__(self, method, module, path, timeout, file_upload = False):
+  def __init__(self, method, module, path, timeout, file_upload):
       self.method = method
       self.file_upload = file_upload
       try: 
