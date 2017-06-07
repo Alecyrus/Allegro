@@ -1,6 +1,7 @@
 import time
 import imp
 import asyncio
+import aiofiles
 
 from sanic.views import HTTPMethodView
 from sanic.response import text
