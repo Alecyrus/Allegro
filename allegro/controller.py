@@ -8,9 +8,10 @@ from sanic.response import json
 from sanic.exceptions import ServerError
 
 class BaseView(HTTPMethodView):
-  def __init__(self, method, module, path, timeout, file_upload):
+  def __init__(self, method, module, path, timeout, file_upload, file_save_path):
       self.method = method
       self.file_upload = file_upload
+      self.file_save_path = file_save_path
       try: 
           file, pathname, desc = imp.find_module(module,[path])
           self.moduleobj = imp.load_module(module, file, pathname, desc)
@@ -47,15 +48,27 @@ class BaseView(HTTPMethodView):
   async def post(self, request):
       if 'post' not in self.method:
           return ServerError("Not support", status_code=400)
-      message = self.request_to_message(request)
       if self.file_upload:
-           message = request
-      handler = "self.moduleobj.post.delay"
-      callback = eval(handler)(message)
-      while(not callback.ready()):
-          await asyncio.sleep(1)      
-      response = callback.result
-      return self.return_check(response)
+          try:
+              file = request.files.get('file')
+              if not file:
+                  raise ServerError('Not file found', status_code=400)
+              async with aiofiles.open(self.file_save_path + file.name, 'wb+') as f:
+                  await f.write(file.body)
+                  return self.return_check({"info":"Upload file successfully", "state":1})
+          except Exception as e:
+              print(e)
+              return self.retuen_check({"info":str(e),"state":0})
+      else:
+          message = self.request_to_message(request)
+          if self.file_upload:
+              message = request
+          handler = "self.moduleobj.post.delay"
+          callback = eval(handler)(message)
+          while(not callback.ready()):
+              await asyncio.sleep(1)      
+          response = callback.result
+          return self.return_check(response)
 
   async def put(self, request):
       if 'put' not in self.method:
