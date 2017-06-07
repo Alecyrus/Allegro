@@ -50,6 +50,7 @@ class Allegro(object):
             uri = self.cf[service]["uri"]
             module = self.cf[service]["module"]
             file_upload = eval(self.cf[service]["file_upload_enabled"])
+            files_save_path = ""
             if file_upload:
                 files_save_path = self.cf[service]["files_save_path"]
             method = self.cf[service]["method"].lower().replace(' ','').split(',')
