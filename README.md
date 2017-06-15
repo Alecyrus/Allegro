@@ -89,6 +89,8 @@ processes_pool = 10
 ;use eventlet  
 eventlet_enabled = True
 eventlet_pool = 1000
+
+file_upload_enabled = False
 ```
 
 
